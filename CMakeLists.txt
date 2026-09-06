@@ -22,6 +22,7 @@ set(
 	"memory.h"	"memory.c"
 	"debug.h"	"debug.c"
 	"value.h" "value.c"
+		"vm.h"	"vm.c"
 )
 
 add_executable ( ${PROJECT_NAME} ${source})
