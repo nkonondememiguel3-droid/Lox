@@ -1,8 +1,8 @@
 #ifndef clox_chunk_h
 #define clox_chunk_h
 
-#include "common.h"
-#include "memory.h"
+/* #include "common.h" */
+/* #include "memory.h" */
 #include "value.h"
 
 /* a bytecode is a dense, linear sequence of binary instructions. */
@@ -14,6 +14,11 @@
 typedef enum {
     OP_CONSTANT,
     OP_CONSTANT_LONG,
+    OP_ADD,
+    OP_SUB,
+    OP_MUL,
+    OP_DIV,
+    OP_NEGATE,
     OP_RETURN,
 } OpCode;
 

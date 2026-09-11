@@ -1,13 +1,22 @@
 ﻿#include "vm.h"
+#include "chunk.h"
 #include "debug.h"
+#include "value.h"
+
+#include <stdio.h>
 
 Vm vm; /* just for learning purpose that we have a global variable. */
 
 static InterpretResult run();
 
 static void printValue(Value value);
+static void resetStack() { // make the stackTop points to the next element to be added in the stack.
+    vm.stackTop = vm.stack;
+}
 
 void initVm() {
+
+    resetStack();
 }
 
 InterpretResult interpret(Chunk *chunk) {
@@ -15,6 +24,14 @@ InterpretResult interpret(Chunk *chunk) {
     vm.ip = vm.chunk->code; /* points to the next instruction that's about to be executed. */
 
     return run();
+}
+
+void push( Value value ) {
+    *vm.stackTop++ = value;
+}
+
+Value pop() {
+    return *--vm.stackTop;
 }
 
 static InterpretResult run() {
@@ -27,25 +44,50 @@ static InterpretResult run() {
         ((uint32_t)READ_BYTE() << 16) \
     ] \
 )
+#define BINARY_OP(op) \
+    do { \
+        Value b = pop(); \
+        Value a = pop(); \
+        push( a op b ); \
+    }while (0)
 
     while (true) {
+
+#ifdef DEBUG
+
+        printf("            ");
+        for ( Value *slot = vm.stack; slot != vm.stackTop; slot++ ) {
+            printf("[ ");
+            printValue( *slot );
+            printf(" ]");
+        }
+        printf("\n");
+
+        disassembleInstruction( vm.chunk, (int)(vm.ip - vm.chunk->code) );
+#endif
+
         uint8_t instruction;
         switch (instruction = READ_BYTE()) {
             case OP_RETURN:
+                printValue(pop());
+                printf("\n");
                 return INTERPRET_OK;
 
             case OP_CONSTANT:
                 Value constant = READ_CONSTANT();
-                printValue(constant);
-                printf("\n");
+                push(constant);
                 break;
 
             case OP_CONSTANT_LONG:
-                printf("long constatn\n");
-                Value LongConstant = READ_CONSTANT_LONG();
-                printValue(LongConstant);
-                printf("\n");
+                Value longConstant = READ_CONSTANT_LONG();
+                push( longConstant );
                 break;
+
+            case OP_NEGATE: push(-pop()); break;
+            case OP_ADD: BINARY_OP(+); break;
+            case OP_SUB: BINARY_OP(-); break;
+            case OP_MUL: BINARY_OP(*); break;
+            case OP_DIV: BINARY_OP(/); break;
 
             default:
                 return INTERPRET_RUNTIME_ERROR;

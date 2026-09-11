@@ -1,7 +1,7 @@
 ﻿#include "common.h"
 #include "chunk.h"
-#include "debug.h"
 #include "vm.h"
+#include <stdlib.h>
 
 int main(int argc, char *argv[]) {
     (void) argc;
@@ -12,10 +12,20 @@ int main(int argc, char *argv[]) {
     Chunk chunk;
     initChunk(&chunk);
 
-    for (size_t i = 0; i < 5; i++)
-        writeConstant(&chunk, 5.5 + (float) i, 123 + (i % 100 == 0 ? 10 : 0));
+    writeConstant(&chunk, 5.5, 123);
+    writeConstant(&chunk, 6.5, 123);
+    writeChunk(&chunk, OP_ADD, 123);
 
-    writeChunk(&chunk, OP_RETURN, 124);
+    writeConstant(&chunk, 3.3, 123);
+    writeChunk(&chunk, OP_SUB, 123);
+
+    writeConstant(&chunk, 0.7, 123);
+    writeChunk(&chunk, OP_SUB, 123);
+
+    writeConstant(&chunk, 2, 123);
+    writeChunk(&chunk, OP_DIV, 123);
+
+    writeChunk(&chunk, OP_RETURN, 125);
 
     //disassembleChunk(&chunk, "test chunk");
     (void) interpret(&chunk);

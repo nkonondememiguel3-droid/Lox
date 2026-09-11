@@ -1,4 +1,5 @@
 #include "chunk.h"
+#include "memory.h"
 
 static void initLines(Lines *lines) {
     lines->count = 0;

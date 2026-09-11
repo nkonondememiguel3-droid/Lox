@@ -1,4 +1,5 @@
 #include "debug.h"
+#include "chunk.h"
 
 #include <stdio.h>
 
@@ -35,6 +36,14 @@ int disassembleInstruction(const Chunk *chunk, const int offset) {
             return constantInstruction("OP_CONSTANT", chunk, offset);
         case OP_CONSTANT_LONG:
             return constantLongInstruction("OP_CONSTANT_LONG", chunk, offset);
+        case OP_ADD:
+            return simpleInstruction("OP_ADD", offset);
+        case OP_SUB:
+            return simpleInstruction("OP_SUB", offset);
+        case OP_MUL:
+            return simpleInstruction("OP_MUL", offset);
+        case OP_DIV:
+            return simpleInstruction("OP_DIV", offset);
         default:
             fprintf(stderr, "Unknow opcode(operation code) %d\n", instruction);
             return offset + 1;
