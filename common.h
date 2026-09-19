@@ -7,4 +7,14 @@
 
 #define DEBUG
 
+#if defined(__unix__) || defined(__APPLE__)
+	#include <sysexits.h>
+#else
+	#ifndef EX_IOERR
+		#define EX_IOERR 74
+	#endif
+#endif
+
+
+
 #endif // clox_common_h
