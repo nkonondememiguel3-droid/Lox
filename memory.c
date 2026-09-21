@@ -1,5 +1,9 @@
 #include "memory.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <err.h>
+
 void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
 	if (newSize == 0) {
 		free(pointer);
@@ -13,10 +17,10 @@ void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
 	*/
 	void* result = realloc(pointer, newSize);
 	if (result == NULL) {
-		perror("realloc failed");
-		exit(1);
+		err(EXIT_FAILURE, "realloc");
+		/* exit(1); */
 	}
-	
+
 	return result;
 }
 

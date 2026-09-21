@@ -11,8 +11,11 @@
 	#include <sysexits.h>
 #else
 	#ifndef EX_IOERR
-		#define EX_IOERR 74
+		#define EX_IOERR 74			/* error occurred while opening a file. */
 	#endif
+	#ifndef EX_USAGE
+		#define EX_USAGE 64				/* command line usage error *1/ */
+	#endif /* ifndef EX_USAGE */
 #endif
 
 
